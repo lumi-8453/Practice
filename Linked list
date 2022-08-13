@@ -1,0 +1,135 @@
+
+using namespace std;
+
+template<class T>
+class node
+{
+public:
+	node() 
+	{ 
+		this->link = NULL; 
+	}
+	template<class U>
+	friend class myList;
+
+private:
+	T data;
+	node< T > *link;
+};
+
+
+
+template <class U>
+class myList
+{
+public:
+	myList() { head = NULL; }
+	~myList()
+	{
+		node<U> *temp = head->link;
+		while (head != NULL)
+		{
+			delete head;
+			head = temp;
+		}
+
+	}
+	void push_back(U n)
+	{
+		node<U> *temp = new node<U>;
+		temp->data = n;
+		if (head == NULL)
+			head = temp;
+		else
+		{
+			node<U>*temp2 = head;
+			while (temp2->link != NULL)
+				temp2 = temp2->link;
+			temp2->link = temp;
+		}
+	}
+	void push_front(U n)
+	{
+		node<U>*temp = new node<U>;
+		temp->data = n;
+		if (head == NULL)
+			head = temp;
+		else
+		{
+			temp->link = head;
+			head = temp;
+		}
+
+	}
+	void insert(int index, U n)
+	{
+		if (index == 0 )
+		{
+			push_front(n);
+			return;
+		}
+		node<U>*temp = new node<U>;
+		temp->data = n;
+		node<U>*temp2 = head;
+		int i;
+		for (i = 0; i < index-1; i++)
+		{
+			temp2 = temp2->link;
+		}
+		temp->link = temp2->link;
+		temp2->link = temp;
+	}
+	void pop_back()
+	{
+		node<U> *temp=head;
+		node<U> *trash;
+		if (temp->link == NULL)
+		{
+			trash = head;
+			head = NULL;
+			delete trash;
+			return;
+		}
+		while (temp->link->link != NULL) 
+			temp = temp->link;
+		trash = temp->link;
+		temp->link = NULL;
+		delete trash;
+		
+	}
+	void pop_front()
+	{
+		node<U> *temp = head;
+		head = head->link;
+		delete temp;
+	}
+	void pop_index(int index)
+	{
+		if (index == 0)
+		{
+			pop_front();
+			return;
+		}
+		node<U> *temp = head;
+		node<U> *trash;
+		int i;
+		for (i = 0; i < index-1; i++)
+		{
+			temp = temp->link;
+		}
+		trash = temp->link;
+		temp->link = temp->link->link;
+		delete trash;
+	}
+
+	void print()
+	{
+		node <U> *temp;
+		for (temp = head; temp != NULL; temp = temp->link)
+			cout << temp->data << " " ;
+		cout << endl;
+	}
+
+private:
+	node <U> *head;
+};
